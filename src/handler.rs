@@ -4,11 +4,11 @@ use std::{
 };
 
 pub struct Handler<'a> {
-    path_to_file: &'a String,
+    path_to_file: &'a str,
 }
 
 impl<'a> Handler<'a> {
-    pub fn new(path_to_file: &'a String) -> Self {
+    pub fn new(path_to_file: &'a str) -> Self {
         Self { path_to_file }
     }
 
