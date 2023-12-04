@@ -23,20 +23,16 @@ impl Day01 {
     }
 
     fn process_input() -> Vec<String> {
-        let handler = Handler::new("./src/day01/input.txt");
-        let processed_input = handler
+        Handler::new("./src/day01/input.txt")
             .handle_input()
             .unwrap()
             .lines()
             .map(|line| line.to_string())
-            .collect();
-
-        processed_input
+            .collect()
     }
 
     pub fn part1() -> u32 {
-        let input = Self::process_input();
-        let result: u32 = input
+        Self::process_input()
             .iter()
             .map(|line| {
                 let numbers_as_chars: Vec<char> = line.chars().filter(|c| c.is_numeric()).collect();
@@ -50,15 +46,12 @@ impl Day01 {
                         .to_digit(10)
                         .unwrap()
             })
-            .sum();
-
-        result
+            .sum()
     }
 
     pub fn part2() -> u32 {
         let map = Self::fill_hashmap();
-        let input = Self::process_input();
-        let result: u32 = input
+        Self::process_input()
             .iter()
             .map(|line| {
                 let mut numbers: Vec<u32> = vec![];
@@ -92,9 +85,7 @@ impl Day01 {
 
                 numbers[0] * 10 + numbers[numbers.len() - 1]
             })
-            .sum();
-
-        result
+            .sum()
     }
 }
 

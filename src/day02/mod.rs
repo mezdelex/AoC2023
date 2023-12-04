@@ -17,19 +17,13 @@ impl Day02 {
     }
 
     fn process_input() -> Vec<Vec<HashMap<String, u32>>> {
-        let handler = Handler::new("./src/day02/input.txt");
-        let processed_input = handler
+        Handler::new("./src/day02/input.txt")
             .handle_input()
             .unwrap()
             .lines()
             .map(|line| {
-                let isolated_grabs = Regex::new(r"Game \d+: ")
-                    .unwrap()
-                    .split(line)
-                    .collect::<Vec<&str>>()[1];
-
+                let isolated_grabs = line.split(": ").collect::<Vec<&str>>()[1];
                 let vec_of_grabs: Vec<&str> = isolated_grabs.split("; ").collect();
-
                 let processed_line = vec_of_grabs
                     .iter()
                     .map(|grab| {
@@ -46,15 +40,12 @@ impl Day02 {
 
                 processed_line
             })
-            .collect();
-
-        processed_input
+            .collect()
     }
 
     pub fn part1() -> usize {
         let max_values = Self::new(12, 13, 14);
-        let input = Self::process_input();
-        input
+        Self::process_input()
             .iter()
             .enumerate()
             .map(|(game, vec_of_grabs)| {
@@ -71,8 +62,7 @@ impl Day02 {
     }
 
     pub fn part2() -> u32 {
-        let input = Self::process_input();
-        input
+        Self::process_input()
             .iter()
             .map(|vec_of_grabs| {
                 let mut min_values = Self::new(1, 1, 1);

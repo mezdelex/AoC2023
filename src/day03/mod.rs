@@ -7,15 +7,12 @@ pub struct Day03;
 
 impl Day03 {
     fn process_input() -> Vec<Vec<char>> {
-        let handler = Handler::new("./src/day03/input.txt");
-        let processed_input = handler
+        Handler::new("./src/day03/input.txt")
             .handle_input()
             .unwrap()
             .lines()
             .map(|line| line.chars().collect())
-            .collect();
-
-        processed_input
+            .collect()
     }
 
     fn fill_left(

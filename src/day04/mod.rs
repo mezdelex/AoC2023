@@ -5,9 +5,7 @@ pub struct Day04;
 
 impl Day04 {
     fn process_input() -> Vec<Vec<Vec<u32>>> {
-        let handler = Handler::new("./src/day04/input.txt");
-
-        handler
+        Handler::new("./src/day04/input.txt")
             .handle_input()
             .unwrap()
             .lines()
@@ -35,7 +33,7 @@ impl Day04 {
                     .count();
 
                 if coincidences > 1 {
-                    return 2_u32.pow(coincidences as u32) - 1;
+                    return 2_u32.pow(coincidences as u32 - 1);
                 }
 
                 coincidences as u32
