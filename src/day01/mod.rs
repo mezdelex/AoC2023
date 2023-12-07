@@ -3,12 +3,10 @@ use std::collections::{HashMap, VecDeque};
 use crate::handler::Handler;
 
 #[derive(Debug)]
-pub struct Day01 {
-    pub map: HashMap<String, u32>,
-}
+pub struct Day01;
 
 impl Day01 {
-    fn fill_hashmap() -> HashMap<String, u32> {
+    fn get_hashmap() -> HashMap<String, u32> {
         HashMap::from([
             ("one".to_string(), 1),
             ("two".to_string(), 2),
@@ -50,7 +48,7 @@ impl Day01 {
     }
 
     pub fn part2() -> u32 {
-        let map = Self::fill_hashmap();
+        let map = Self::get_hashmap();
         Self::process_input()
             .iter()
             .map(|line| {
