@@ -70,53 +70,27 @@ impl Day07 {
             1 => hand.strength = 7,
             2 => {
                 if coincidences.values().any(|&value| value == 4) {
-                    hand.strength = 6;
-                    if is_part2 {
-                        if coincidences.contains_key(&'J') {
-                            hand.strength += 1
-                        }
-                    }
+                    hand.strength = 6
                 } else {
-                    hand.strength = 5;
-                    if is_part2 {
-                        if coincidences.contains_key(&'J') {
-                            hand.strength += 2
-                        }
-                    }
+                    hand.strength = 5
                 }
             }
             3 => {
                 if coincidences.values().any(|&value| value == 3) {
-                    hand.strength = 4;
-                    if is_part2 {
-                        if coincidences.contains_key(&'J') {
-                            hand.strength += 2
-                        }
-                    }
+                    hand.strength = 4
                 } else {
-                    hand.strength = 3;
-                    if is_part2 {
-                        if coincidences.contains_key(&'J') {
-                            hand.strength += coincidences.get(&'J').unwrap() + 1
-                        }
-                    }
+                    hand.strength = 3
                 }
             }
-            4 => {
-                hand.strength = 2;
-                if is_part2 {
-                    if coincidences.contains_key(&'J') {
-                        hand.strength += 2
-                    }
-                }
-            }
-            _ => {
-                hand.strength = 1;
-                if is_part2 {
-                    if coincidences.contains_key(&'J') {
-                        hand.strength += 1
-                    }
-                }
+            4 => hand.strength = 2,
+            _ => hand.strength = 1,
+        }
+        if is_part2 && coincidences.contains_key(&'J') {
+            match hand.strength {
+                7 => {}
+                6 | 1 => hand.strength += 1,
+                3 => hand.strength += coincidences.get(&'J').unwrap() + 1,
+                _ => hand.strength += 2,
             }
         }
     }
