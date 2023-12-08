@@ -26,7 +26,7 @@ pub struct Day07 {
 }
 
 impl Day07 {
-    pub fn new() -> Self {
+    fn new() -> Self {
         Day07 {
             card_converter1: HashMap::from([
                 ('2', 2),
@@ -61,7 +61,7 @@ impl Day07 {
         }
     }
 
-    pub fn calculate_hand_value(hand: &mut Hand, is_part2: bool) {
+    fn calculate_hand_value(hand: &mut Hand, is_part2: bool) {
         let mut coincidences: HashMap<char, u32> = HashMap::new();
         hand.cards.iter().for_each(|&card| {
             *coincidences.entry(card).or_insert(0) += 1;
