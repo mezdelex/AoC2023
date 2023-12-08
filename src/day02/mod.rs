@@ -17,28 +17,27 @@ impl Day02 {
     }
 
     fn process_input() -> Vec<Vec<HashMap<String, u32>>> {
+        let regex = Regex::new("[, ]+").unwrap();
         Handler::new("./src/day02/input.txt")
             .handle_input()
             .unwrap()
             .lines()
             .map(|line| {
-                let isolated_grabs = line.split(": ").collect::<Vec<&str>>()[1];
-                let vec_of_grabs: Vec<&str> = isolated_grabs.split("; ").collect();
-                let processed_line = vec_of_grabs
+                line.split_once(": ")
+                    .unwrap()
+                    .1
+                    .split("; ")
+                    .collect::<Vec<&str>>()
                     .iter()
                     .map(|grab| {
-                        let values_and_keys: Vec<&str> =
-                            Regex::new("[, ]+").unwrap().split(&grab).collect();
-                        let mut grab_map: HashMap<String, u32> = HashMap::new();
-                        values_and_keys.chunks(2).for_each(|chunk| {
-                            grab_map.insert(chunk[1].to_string(), chunk[0].parse().unwrap());
-                        });
-
-                        grab_map
+                        regex
+                            .split(&grab)
+                            .collect::<Vec<&str>>()
+                            .chunks(2)
+                            .map(|chunk| (chunk[1].to_string(), chunk[0].parse().unwrap()))
+                            .collect::<HashMap<String, u32>>()
                     })
-                    .collect();
-
-                processed_line
+                    .collect::<Vec<HashMap<String, u32>>>()
             })
             .collect()
     }

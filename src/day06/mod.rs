@@ -7,13 +7,13 @@ pub struct Day06;
 
 impl Day06 {
     fn process_input() -> Vec<Vec<u64>> {
+        let regex = Regex::new(r"\D+").unwrap();
         Handler::new("./src/day06/input.txt")
             .handle_input()
             .unwrap()
             .lines()
             .map(|line| {
-                Regex::new(r"\D+")
-                    .unwrap()
+                regex
                     .split(&line)
                     .map(|num| num.parse::<u64>().unwrap_or_default())
                     .skip(1)

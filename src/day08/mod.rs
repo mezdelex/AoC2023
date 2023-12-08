@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 
+use rayon::iter::{ParallelBridge, ParallelIterator};
 use regex::Regex;
 
 use crate::handler::Handler;
@@ -17,23 +18,24 @@ impl Day08 {
     }
 
     fn process_input() -> (Vec<char>, HashMap<String, (String, String)>) {
-        let input: Vec<String> = Handler::new("./src/day08/input.txt")
+        let input = Handler::new("./src/day08/input.txt")
             .handle_input()
-            .unwrap()
-            .lines()
-            .map(|line| line.to_string())
+            .unwrap();
+        let mut lines = input.lines();
+        let instructions: Vec<char> = lines.next().unwrap().chars().collect();
+        let regex = Regex::new(r"\W+").unwrap();
+        let node_map: HashMap<String, (String, String)> = lines
+            .skip(1)
+            .par_bridge()
+            .map(|line| {
+                let vec_values: Vec<&str> = regex.split(line).collect();
+
+                (
+                    vec_values[0].to_string(),
+                    (vec_values[1].to_string(), vec_values[2].to_string()),
+                )
+            })
             .collect();
-
-        let instructions: Vec<char> = input[0].chars().collect();
-        let mut node_map: HashMap<String, (String, String)> = HashMap::new();
-        input[2..].iter().for_each(|line| {
-            let vec_values: Vec<&str> = Regex::new(r"\W+").unwrap().split(line).collect();
-
-            node_map.insert(
-                vec_values[0].to_string(),
-                (vec_values[1].to_string(), vec_values[2].to_string()),
-            );
-        });
 
         (instructions, node_map)
     }
