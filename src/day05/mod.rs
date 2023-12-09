@@ -1,4 +1,10 @@
-use rayon::prelude::{IntoParallelIterator, ParallelIterator};
+use std::{collections::HashSet, u64};
+
+use rayon::{
+    iter::IntoParallelRefIterator,
+    prelude::{IntoParallelIterator, ParallelIterator},
+    slice::ParallelSlice,
+};
 use regex::Regex;
 
 use crate::handler::Handler;
@@ -25,63 +31,48 @@ impl Day05 {
             .collect()
     }
 
+    fn map_to_location(input: &Vec<Vec<u64>>, seed: u64) -> u64 {
+        let mut mapped = seed;
+        for i in 0..input[1..].len() {
+            for j in (0..input[1..][i].len()).step_by(3) {
+                if (input[1..][i][j + 1]..input[1..][i][j + 1] + input[1..][i][j + 2])
+                    .contains(&mapped)
+                {
+                    mapped = input[1..][i][j] + mapped - input[1..][i][j + 1];
+                    break;
+                }
+            }
+        }
+
+        mapped
+    }
+
     pub fn part1() -> u64 {
         let input = Self::process_input();
         input[0]
-            .iter()
-            .map(|&seed| {
-                let mut current = seed;
-                let mut min = u64::MAX;
-
-                for i in 0..input[1..].len() {
-                    for j in (0..input[1..][i].len()).step_by(3) {
-                        if (input[1..][i][j + 1]..input[1..][i][j + 1] + input[1..][i][j + 2])
-                            .contains(&current)
-                        {
-                            current = input[1..][i][j] + current - input[1..][i][j + 1];
-                            break;
-                        }
-                    }
-                    if i == input[1..].len() - 1 && current < min {
-                        min = current;
-                    }
-                }
-                min
-            })
+            .par_iter()
+            .map(|&seed| Self::map_to_location(&input, seed))
             .min()
             .unwrap()
     }
 
     pub fn part2() -> u64 {
         let input = Self::process_input();
-        input[0]
-            .chunks(2)
-            .map(|chunk| {
-                (chunk[0]..=chunk[0] + chunk[1])
-                    .into_par_iter()
-                    .map(|seed| {
-                        let mut current = seed;
-                        let mut min = u64::MAX;
+        let seeds: HashSet<&u64> = HashSet::new();
 
-                        for i in 0..input[1..].len() {
-                            for j in (0..input[1..][i].len()).step_by(3) {
-                                if (input[1..][i][j + 1]
-                                    ..input[1..][i][j + 1] + input[1..][i][j + 2])
-                                    .contains(&current)
-                                {
-                                    current = input[1..][i][j] + current - input[1..][i][j + 1];
-                                    break;
-                                }
-                            }
-                            if i == input[1..].len() - 1 && current < min {
-                                min = current;
-                            }
-                        }
-                        min
-                    })
-                    .min()
-                    .unwrap()
-            })
+        input[0].par_chunks(2).for_each(|chunk| {
+            (chunk[0]..chunk[0] + chunk[1])
+                .into_par_iter()
+                .for_each(|seed| {
+                    let seed_clone = seed.clone();
+                    let mut seeds_clone = seeds.clone();
+                    seeds_clone.insert(&seed_clone);
+                });
+        });
+
+        seeds
+            .par_iter()
+            .map(|&seed| Self::map_to_location(&input, *seed))
             .min()
             .unwrap()
     }
@@ -94,7 +85,7 @@ fn test1() {
 }
 
 #[test]
-#[ignore = "brute force, too heavy to run in ci"]
+#[ignore = "too heavy"]
 fn test2() {
     let expected = 52510809;
     assert_eq!(expected, Day05::part2());
