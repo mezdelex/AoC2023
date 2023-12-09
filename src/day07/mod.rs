@@ -1,5 +1,10 @@
 use std::{cmp::Ordering, collections::HashMap};
 
+use rayon::{
+    iter::{IndexedParallelIterator, IntoParallelRefIterator, ParallelIterator},
+    str::ParallelString,
+};
+
 use crate::handler::Handler;
 
 #[derive(Debug)]
@@ -99,7 +104,7 @@ impl Day07 {
         Handler::new("./src/day07/input.txt")
             .handle_input()
             .unwrap()
-            .lines()
+            .par_lines()
             .map(|line| {
                 let values: Vec<&str> = line.split_whitespace().collect();
                 let mut hand = Hand::new(values[0].chars().collect(), values[1].parse().unwrap());
@@ -129,7 +134,7 @@ impl Day07 {
             prev.strength.cmp(&next.strength)
         });
         hands
-            .iter()
+            .par_iter()
             .enumerate()
             .map(|(idx, card)| (idx + 1) * card.bid)
             .sum()
@@ -155,7 +160,7 @@ impl Day07 {
             prev.strength.cmp(&next.strength)
         });
         hands
-            .iter()
+            .par_iter()
             .enumerate()
             .map(|(idx, card)| (idx + 1) * card.bid)
             .sum()

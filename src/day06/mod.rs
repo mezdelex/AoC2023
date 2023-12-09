@@ -1,3 +1,7 @@
+use rayon::{
+    iter::{IndexedParallelIterator, IntoParallelRefIterator, ParallelIterator},
+    str::ParallelString,
+};
 use regex::Regex;
 
 use crate::handler::Handler;
@@ -11,7 +15,7 @@ impl Day06 {
         Handler::new("./src/day06/input.txt")
             .handle_input()
             .unwrap()
-            .lines()
+            .par_lines()
             .map(|line| {
                 regex
                     .split(&line)
@@ -37,7 +41,7 @@ impl Day06 {
     pub fn part1() -> u64 {
         let input = Self::process_input();
         input[0]
-            .iter()
+            .par_iter()
             .enumerate()
             .map(|(idx, time)| {
                 let chances = Self::get_chances(time, input[1][idx], 1);
@@ -54,13 +58,13 @@ impl Day06 {
     pub fn part2() -> u64 {
         let input = Self::process_input();
         let time: u64 = input[0]
-            .iter()
+            .par_iter()
             .map(|&num| num.to_string())
             .collect::<String>()
             .parse()
             .unwrap();
         let distance: u64 = input[1]
-            .iter()
+            .par_iter()
             .map(|&num| num.to_string())
             .collect::<String>()
             .parse()

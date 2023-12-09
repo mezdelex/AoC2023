@@ -1,5 +1,10 @@
 use std::collections::{HashMap, VecDeque};
 
+use rayon::{
+    iter::{IntoParallelRefIterator, ParallelIterator},
+    str::ParallelString,
+};
+
 use crate::handler::Handler;
 
 #[derive(Debug)]
@@ -24,14 +29,14 @@ impl Day01 {
         Handler::new("./src/day01/input.txt")
             .handle_input()
             .unwrap()
-            .lines()
+            .par_lines()
             .map(|line| line.to_string())
             .collect()
     }
 
     pub fn part1() -> u32 {
         Self::process_input()
-            .iter()
+            .par_iter()
             .map(|line| {
                 let numbers_as_chars: Vec<char> = line.chars().filter(|c| c.is_numeric()).collect();
 
@@ -50,7 +55,7 @@ impl Day01 {
     pub fn part2() -> u32 {
         let map = Self::get_hashmap();
         Self::process_input()
-            .iter()
+            .par_iter()
             .map(|line| {
                 let mut numbers: Vec<u32> = vec![];
                 let mut word: VecDeque<char> = VecDeque::new();

@@ -1,3 +1,8 @@
+use rayon::{
+    iter::{IntoParallelRefIterator, ParallelIterator},
+    str::ParallelString,
+};
+
 use crate::handler::Handler;
 
 #[derive(Debug)]
@@ -8,7 +13,7 @@ impl Day04 {
         Handler::new("./src/day04/input.txt")
             .handle_input()
             .unwrap()
-            .lines()
+            .par_lines()
             .map(|line| {
                 line.split(": ").collect::<Vec<&str>>()[1]
                     .split(" | ")
@@ -25,7 +30,7 @@ impl Day04 {
 
     pub fn part1() -> u32 {
         Self::process_input()
-            .iter()
+            .par_iter()
             .map(|pile| {
                 let coincidences = pile[1]
                     .iter()

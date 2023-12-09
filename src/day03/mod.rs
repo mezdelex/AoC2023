@@ -1,5 +1,7 @@
 use std::collections::VecDeque;
 
+use rayon::{iter::ParallelIterator, str::ParallelString};
+
 use crate::handler::Handler;
 
 #[derive(Debug)]
@@ -10,7 +12,7 @@ impl Day03 {
         Handler::new("./src/day03/input.txt")
             .handle_input()
             .unwrap()
-            .lines()
+            .par_lines()
             .map(|line| line.chars().collect())
             .collect()
     }

@@ -1,5 +1,9 @@
 use std::collections::HashMap;
 
+use rayon::{
+    iter::{IndexedParallelIterator, IntoParallelRefIterator, ParallelIterator},
+    str::ParallelString,
+};
 use regex::Regex;
 
 use crate::handler::Handler;
@@ -21,14 +25,14 @@ impl Day02 {
         Handler::new("./src/day02/input.txt")
             .handle_input()
             .unwrap()
-            .lines()
+            .par_lines()
             .map(|line| {
                 line.split_once(": ")
                     .unwrap()
                     .1
                     .split("; ")
                     .collect::<Vec<&str>>()
-                    .iter()
+                    .par_iter()
                     .map(|grab| {
                         regex
                             .split(&grab)
@@ -45,7 +49,7 @@ impl Day02 {
     pub fn part1() -> usize {
         let max_values = Self::new(12, 13, 14);
         Self::process_input()
-            .iter()
+            .par_iter()
             .enumerate()
             .map(|(game, vec_of_grabs)| {
                 match vec_of_grabs.iter().any(|grab| {
@@ -62,7 +66,7 @@ impl Day02 {
 
     pub fn part2() -> u32 {
         Self::process_input()
-            .iter()
+            .par_iter()
             .map(|vec_of_grabs| {
                 let mut min_values = Self::new(1, 1, 1);
                 vec_of_grabs.iter().for_each(|grab| {
